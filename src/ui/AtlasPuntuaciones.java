@@ -1,116 +1,104 @@
-// Análisis (completar)
-// Descripción del programa:
-// Entradas:
-// Salidas:
-// Ejemplo:
-
-
-package ui; // No olvidar especificar el paquete / carpeta de nuestro programa
-
-import java.util.Scanner; // Para poder usar Scanner, debemos importarlo
+package ui;
+import java.util.Scanner;
 
 public class AtlasPuntuaciones {
-
-	// Declaración del Escaner que nos ayudará en todo el programa
-	private Scanner escaner;
-
-	// Declaración de nuestras constantes a utilizar
-	 	private final int MINIMO_CANTIDAD_JUGADORES=1;
-		private final int MAXIMO_CANTIDAD_JUGADORES =10;
-	  
-	  private final int MINIMORONDAS =1;
-	  private final int MAXIMORONDAS =5;
-      private final int MINIMOPUNTAJE =0;
-      private final int MAXIMOPUNTAJE =100;
-
-	private AtlasPuntuaciones() {
-		escaner = new Scanner(System.in);
-	}
-	
-	
-	public void run()
-	{
-
-			int numerojugadores;
-			int numeroderondas;
-
-		// Declaracion de todas las variables a usar en el programa
-		
-		// aqui en este paso solicitaremos la cantidad de jugadores 
-		 
-		  System.out.println ("Holaa, ingresame la cantidad de jugadores que deseas :3");
-		  numerojugadores = escaner.nextInt();
-		  escaner.nextLine();
-		      System.out.println ("Holaa, ingresame tambien el numero rondas que deseas :3");
-
-          numeroderondas = escaner.nextInt();
-		  escaner.nextLine();
-		  
-           System.out.println ("Holaa, ingresame tambien el numero rondas que deseas :3");
-
-			/*
-		   MINIMO_CANTIDAD_JUGADORES + "-" +
-		   MAXIMO_CANTIDAD_JUGADORES +"):");
-		   */
-			if(numerojugadores<MINIMO_CANTIDAD_JUGADORES && numerojugadores>MAXIMO_CANTIDAD_JUGADORES){
-
-				System.out.println ("no es un valor ");
-
-			}
-              while(numerojugadores<MINIMO_CANTIDAD_JUGADORES && numerojugadores>MAXIMO_CANTIDAD_JUGADORES);
-		    /* solicitamos la cantidad de rondas en esta area 
-            */ 
-            System.out.println ("Ingresa por fis la cantidad de rondas"+MINIMORONDAS + MAXIMORONDAS);
-			  numeroderondas = escaner.nextInt();
-			  if(numeroderondas<MINIMORONDAS && numeroderondas>MAXIMORONDAS);
-              
-            System.out.println ("Este valor no es valido D:"); 
-
-			  while(numeroderondas<minimorondas && numerorondas>maximorondas);{
-
-			  }
-			  /*
-			  usemos arreglos para poner los nombres como tambien los puntajes que nos piden 
-
-			  */
-
-			 String[][] nombres= new String[numerojugadores][numeroderondas];
-	}
-			  
-                
-	public static void main(String[] args) {
-		AtlasPuntuaciones mainApp = new AtlasPuntuaciones();
-		mainApp.run();
-	}
-
-	/**
-	 * Descripción: El método calcularSumaTotal permite ...
-	 * @param int[] numeros
-	 * @return 
-	 */
+    private Scanner escaner;
+    private final int MINIMO_CANTIDAD_JUGADORES = 1;
+    private final int MAXIMO_CANTIDAD_JUGADORES = 10;
+    private final int MINIMORONDAS = 1;
+    private final int MAXIMORONDAS = 5;
+    private final int MINIMOPUNTAJE = 0;
+    private final int MAXIMOPUNTAJE = 100;
+    
+    private AtlasPuntuaciones() {
+        escaner = new Scanner(System.in);
+    }
+    
+    public void run() {
+        int numerojugadores;
+        int numeroderondas;
+        do {
+            System.out.print("Ingrese la cantidad de jugadores :3 (" + MINIMO_CANTIDAD_JUGADORES + "-" + MAXIMO_CANTIDAD_JUGADORES + "): ");
+            numerojugadores = escaner.nextInt();
+        } while (numerojugadores < MINIMO_CANTIDAD_JUGADORES || numerojugadores > MAXIMO_CANTIDAD_JUGADORES);
+        do {
+            System.out.print("Ingrese la cantidad de rondas :D (" + MINIMORONDAS + "-" + MAXIMORONDAS + "): ");
+            numeroderondas = escaner.nextInt();
+        } while (numeroderondas < MINIMORONDAS || numeroderondas > MAXIMORONDAS);
+        
+        String[] nombres = new String[numerojugadores];
+        int[][] puntajes = new int[numerojugadores][numeroderondas];
+        for (int i = 0; i < numerojugadores; i++) {
+            System.out.println("Ingresa el nombre del jugador :3 " + (i + 1) + ":");
+            nombres[i] = escaner.next();
+            for (int j = 0; j < numeroderondas; j++) {
+                int puntaje;
+                do {
+                    System.out.printf("Ingrese el puntaje de %s en ronda %d (%d-%d): ", nombres[i], (j + 1), MINIMOPUNTAJE, MAXIMOPUNTAJE);
+                    puntaje = escaner.nextInt();
+                    if (puntaje < MINIMOPUNTAJE || puntaje > MAXIMOPUNTAJE) {
+                        System.out.println("Puntaje inválido D:. Debe ser entre " + MINIMOPUNTAJE + " y " + MAXIMOPUNTAJE + ".");
+                    }
+                } while (puntaje < MINIMOPUNTAJE || puntaje > MAXIMOPUNTAJE);
+                puntajes[i][j] = puntaje;
+            }
+        }
+        
+        int[] totales = new int[numerojugadores];
+        double[] promedios = new double[numerojugadores];
+        double[] totalesDouble = new double[numerojugadores];
+        for (int i = 0; i < numerojugadores; i++) {
+            totales[i] = calcularSumaTotal(puntajes[i]);
+            totalesDouble[i] = totales[i];
+            promedios[i] = calcularPromedio(puntajes[i]);
+        }
+        double mayorTotal = encontrarMayor(totalesDouble);
+        int indiceGanador = 0;
+        for (int i = 0; i < numerojugadores; i++) {
+            if (totales[i] == mayorTotal) {
+                indiceGanador = i;
+                break;
+            }
+        }
+        System.out.println("\nResultados del Torneo:");
+        for (int i = 0; i < numerojugadores; i++) {
+            System.out.println(nombres[i] + " - Total: " + totales[i] + ", Promedio: " + String.format("%.2f", promedios[i]));
+        }
+        System.out.println("\nEl jugador con la mayor puntuación es: " + nombres[indiceGanador]);
+    }
+    
+    public static void main(String[] args) {
+        AtlasPuntuaciones mainApp = new AtlasPuntuaciones();
+        mainApp.run();
+    }
+    
     public int calcularSumaTotal(int[] numeros) {
-       return 0;
+        int suma = 0;
+        for (int num : numeros) {
+            suma += num;
+        }
+        return suma;
     }
-
-	/**
-	 * Descripción: El método calcularPromedio permite ...
-	 * @param int[] numeros
-	 * @return 
-	 */
+    
     public double calcularPromedio(int[] numeros) {
-        return 0;
+        int suma = calcularSumaTotal(numeros);
+        return (double) suma / numeros.length;
     }
-
-	/**
-	 * Descripción: El método encontrarMayor permite ...
-	 * @param double[] numeros
-	 * @return 
-	 */
+    
     public double encontrarMayor(double[] numeros) {
-        return 0;
+        double mayor = numeros[0];
+        for (int i = 1; i < numeros.length; i++) {
+            if (numeros[i] > mayor) {
+                mayor = numeros[i];
+            }
+        }
+        return mayor;
     }
-
-	
-
-	
 }
+
+
+
+
+
+
+
